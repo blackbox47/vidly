@@ -4,6 +4,7 @@ import { getGenres } from "./../services/fakeGenreService";
 import Pagination from "./common/pagination";
 import { paginate } from "./utils/paginate";
 import ListGroup from "./common/listGroup";
+import MovieTable from "./movieTable";
 
 class Movie extends Component {
   state = {
@@ -30,9 +31,11 @@ class Movie extends Component {
   handleListGroup = genre => {
     this.setState({ selectedGenre: genre, currentPage: 1 });
   };
+  handleSort = path => {
+    console.log(path);
+  };
 
   render() {
-    console.log(this.state.selectedGenre);
     const filtered =
       this.state.selectedGenre && this.state.selectedGenre._id
         ? this.state.movies.filter(
@@ -48,8 +51,8 @@ class Movie extends Component {
 
     return (
       <React.Fragment>
-        <div className="row">
-          <div className="col-3">
+        <div className="row m-2">
+          <div className="col-3 m-2 myCSS">
             <ListGroup
               items={this.state.genres}
               onListGroup={this.handleListGroup}
@@ -62,34 +65,13 @@ class Movie extends Component {
                 ? "There is no Movie in the Database"
                 : "There is " + filtered.length + " movies in the Database"}
             </span>
-            <table className="table">
-              <thead>
-                <tr>
-                  <th>Title</th>
-                  <th>Genre</th>
-                  <th>Stock</th>
-                  <th>Rate</th>
-                </tr>
-              </thead>
-              <tbody>
-                {paginated_movies.map(movie => (
-                  <tr key={movie._id}>
-                    <td>{movie.title}</td>
-                    <td>{movie.genre.name}</td>
-                    <td>{movie.numberInStock}</td>
-                    <td>{movie.dailyRentalRate}</td>
-                    <td>
-                      <button
-                        onClick={() => this.handleDelete(movie)}
-                        className="btn btn-sm btn-danger"
-                      >
-                        Delete
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+
+            <MovieTable
+              paginated_movies={paginated_movies}
+              onDelete={this.handleDelete}
+              onSort={this.handleSort}
+            ></MovieTable>
+
             <Pagination
               itemCounts={filtered.length}
               pageSize={this.state.pageSize}

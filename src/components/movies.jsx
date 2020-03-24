@@ -5,6 +5,7 @@ import Pagination from "./common/pagination";
 import { paginate } from "./utils/paginate";
 import ListGroup from "./common/listGroup";
 import MovieTable from "./movieTable";
+import { Link } from "react-router-dom";
 
 class Movie extends Component {
   state = {
@@ -60,12 +61,20 @@ class Movie extends Component {
             ></ListGroup>
           </div>
           <div className="col">
-            <span>
-              {filtered.length === 0
-                ? "There is no Movie in the Database"
-                : "There is " + filtered.length + " movies in the Database"}
-            </span>
-
+            <Link
+              to="/movies/new"
+              className="btn btn-primary"
+              style={{ marginBottom: 2 }}
+            >
+              New Movie
+            </Link>
+            <div>
+              <span>
+                {filtered.length === 0
+                  ? "There is no Movie in the Database"
+                  : "There is " + filtered.length + " movies in the Database"}
+              </span>
+            </div>
             <MovieTable
               paginated_movies={paginated_movies}
               onDelete={this.handleDelete}

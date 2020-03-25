@@ -6,6 +6,7 @@ import { paginate } from "./utils/paginate";
 import ListGroup from "./common/listGroup";
 import MovieTable from "./movieTable";
 import { Link } from "react-router-dom";
+import _ from "lodash";
 
 class Movie extends Component {
   state = {
@@ -13,7 +14,8 @@ class Movie extends Component {
     genres: [],
     selectedGenre: {},
     currentPage: 1,
-    pageSize: 4
+    pageSize: 4,
+    sortColumn: { path: "title", order: "asc" }
   };
 
   componentDidMount() {
@@ -32,8 +34,16 @@ class Movie extends Component {
   handleListGroup = genre => {
     this.setState({ selectedGenre: genre, currentPage: 1 });
   };
+
   handleSort = path => {
-    console.log(path);
+    const sortColumn = { ...this.state.sortColumn };
+    if (sortColumn.path == path) {
+      sortColumn.order = sortColumn.order === "asc" ? "desc" : "asc";
+    } else {
+      sortColumn.path = path;
+      sortColumn.order = "asc";
+    }
+    this.setState({ sortColumn });
   };
 
   render() {
@@ -44,8 +54,14 @@ class Movie extends Component {
           )
         : this.state.movies;
 
-    const paginated_movies = paginate(
+    const sorted = _.orderBy(
       filtered,
+      [this.state.sortColumn.path],
+      [this.state.sortColumn.order]
+    );
+
+    const paginated_movies = paginate(
+      sorted,
       this.state.currentPage,
       this.state.pageSize
     );
@@ -79,6 +95,7 @@ class Movie extends Component {
               paginated_movies={paginated_movies}
               onDelete={this.handleDelete}
               onSort={this.handleSort}
+              sortColumn={this.state.sortColumn}
             ></MovieTable>
 
             <Pagination

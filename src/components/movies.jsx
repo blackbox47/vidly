@@ -80,11 +80,11 @@ class Movie extends Component {
             <Link
               to="/movies/new"
               className="btn btn-primary"
-              style={{ marginBottom: 2 }}
+              style={{ marginBottom: 2, marginTop: 10 }}
             >
               New Movie
             </Link>
-            <div>
+            <div className="m-2">
               <span>
                 {filtered.length === 0
                   ? "There is no Movie in the Database"
